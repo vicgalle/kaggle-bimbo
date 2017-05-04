@@ -47,14 +47,14 @@ features=names(data_train)[!(names(data_train) %in% c('id',"target",'tst','V1'))
 
 # Some rows are used as a validation set
 valset=sample(nrow(data_train),50000)
-val<-xgb.DMatrix(data=data.matrix(data_train[valset,features,with=FALSE]),
-                  label=data.matrix(data_train[valser,target]),missing=NA)
+val=xgb.DMatrix(data=data.matrix(data_train[valset,features,with=FALSE]),
+                  label=data.matrix(data_train[valset,target]),missing=NA)
 
-dd = xgb.DMatrix(data=data.matrix(data_train[,features,with=FALSE]),
-                 label=data.matrix(data_train[,target]),missing=NA)
+dd = xgb.DMatrix(data=data.matrix(data_train[-valset,features,with=FALSE]),
+                 label=data.matrix(data_train[-valset,target]),missing=NA)
 rm(data_train)
 
-clf <- xgb.train(params=list(  objective="reg:linear", 
+clf = xgb.train(params=list(  objective="reg:linear", 
                                booster = "gbtree",
                                eta=0.1, 
                                max_depth=10, 
